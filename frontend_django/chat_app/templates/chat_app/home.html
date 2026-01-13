@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knitwear & Co. | Fall/Winter 2026</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;0,6..96,700;1,6..96,400&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fashion: ['Bodoni Moda', 'serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Lato', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#1a1a1a',
+                            cream: '#f5f5f0',
+                        }
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in {
+            animation: fadeIn 1.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hide scrollbar for cleaner look but keep functionality */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+
+<body class="bg-brand-cream text-brand-black">
+
+    <!-- Navbar -->
+    <nav id="navbar"
+        class="fixed top-0 w-full z-50 flex justify-between items-center px-6 md:px-12 py-8 text-white transition-all duration-300 mix-blend-difference">
+        <!-- Logo -->
+        <a href="#" class="text-2xl font-fashion font-bold tracking-widest uppercase italic z-50">Knitwear & Co.</a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex gap-12 text-xs font-fashion font-bold tracking-[0.2em] uppercase">
+            <a href="#campaign" class="hover:text-gray-300 hover:scale-105 transition-all duration-300">Campaign</a>
+            <a href="{% url 'chat' %}"
+                class="hover:text-gray-300 hover:scale-105 transition-all duration-300">Collection</a>
+            <a href="#stories" class="hover:text-gray-300 hover:scale-105 transition-all duration-300">Stories</a>
+        </div>
+
+        <!-- Mobile Menu Placeholder -->
+        <a href="{% url 'chat' %}"
+            class="md:hidden text-xs font-fashion uppercase tracking-wider border-b border-white pb-1">Shop</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative w-full h-screen flex flex-col justify-center items-center text-center px-4 overflow-hidden">
+        <!-- Background Image -->
+        <div class="absolute inset-0 z-0">
+            <div
+                class="w-full h-full bg-[url('https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center brightness-[0.7]">
+            </div>
+        </div>
+
+        <div class="relative z-10 text-white">
+            <p class="text-xs md:text-sm tracking-[0.4em] uppercase mb-6 font-sans fade-in"
+                style="animation-delay: 0.2s;">Fall / Winter 2026</p>
+            <h1 class="text-5xl md:text-8xl lg:text-9xl font-serif italic mb-10 fade-in leading-[0.9]"
+                style="animation-delay: 0.4s;">
+                Editorial <br> <span class="not-italic">Essence</span>
+            </h1>
+
+            <div class="fade-in" style="animation-delay: 0.8s;">
+                <a href="{% url 'chat' %}"
+                    class="group inline-block px-10 py-4 border border-white text-white uppercase tracking-widest text-xs font-bold hover:bg-white hover:text-black transition-all duration-500">
+                    Discover Collection
+                    <span class="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white animate-bounce opacity-70">
+            <span class="text-xs tracking-widest uppercase">Scroll</span>
+        </div>
+    </header>
+
+    <!-- Campaign Section -->
+    <section id="campaign" class="py-24 px-6 md:px-12 bg-white">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 scroll-trigger">
+                <span class="text-xs font-sans tracking-[0.3em] uppercase text-gray-500 block mb-3">The Season</span>
+                <h2 class="text-4xl md:text-6xl font-fashion italic">Campaign 2026</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+                <!-- Image 1 -->
+                <div class="relative group overflow-hidden scroll-trigger delay-100">
+                    <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop"
+                        alt="Woman in yellow coat"
+                        class="w-full h-[600px] object-cover transition-transform duration-1000 group-hover:scale-105">
+                    <div
+                        class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black/60 to-transparent text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <h3 class="font-serif text-2xl italic">Urban Texture</h3>
+                        <p class="text-xs uppercase tracking-widest mt-2">Explore the look</p>
+                    </div>
+                </div>
+
+                <!-- Text / Content Block -->
+                <div class="flex flex-col justify-center items-start space-y-8 scroll-trigger delay-200 px-4 md:px-12">
+                    <h3 class="text-3xl font-serif leading-tight">
+                        "Elegance is not standing out, but being remembered."
+                    </h3>
+                    <p class="text-gray-600 font-sans leading-relaxed">
+                        Our latest campaign explores the duality of modern life—soft knits meeting sharp architectural
+                        lines.
+                        Designed for the woman who moves effortlessly between worlds.
+                    </p>
+                    <a href="{% url 'chat' %}"
+                        class="text-xs uppercase tracking-[0.2em] font-bold border-b border-black pb-1 hover:text-gray-600 transition-colors">
+                        View Lookbook
+                    </a>
+                </div>
+            </div>
+
+            <!-- Second Row (Reversed) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mt-20">
+                <div
+                    class="order-2 md:order-1 flex flex-col justify-center items-end text-right space-y-8 scroll-trigger delay-200 px-4 md:px-12">
+                    <h3 class="text-3xl font-serif leading-tight">
+                        Monochrome <br> <span class="italic text-gray-400">Minimalism</span>
+                    </h3>
+                    <p class="text-gray-600 font-sans leading-relaxed">
+                        Stripping back the noise to reveal the essential. Premium wool blends, sustainable sourcing,
+                        and timeless silhouettes that define the new season.
+                    </p>
+                    <a href="{% url 'chat' %}"
+                        class="text-xs uppercase tracking-[0.2em] font-bold border-b border-black pb-1 hover:text-gray-600 transition-colors">
+                        Shop Neutrals
+                    </a>
+                </div>
+
+                <div class="order-1 md:order-2 relative group overflow-hidden scroll-trigger delay-100">
+                    <img src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?q=80&w=2073&auto=format&fit=crop"
+                        alt="Fashion model minimalist"
+                        class="w-full h-[600px] object-cover transition-transform duration-1000 group-hover:scale-105">
+                    <div
+                        class="absolute bottom-0 left-0 p-8 w-full bg-gradient-to-t from-black/60 to-transparent text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <h3 class="font-serif text-2xl italic">Pure Form</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee / Text Separator -->
+    <div class="py-12 bg-black text-white overflow-hidden whitespace-nowrap">
+        <div class="inline-block animate-marquee pl-full">
+            <span class="text-4xl md:text-6xl font-fashion italic mx-8">Sustainable Luxury</span>
+            <span class="text-4xl md:text-6xl font-serif mx-8">♦</span>
+            <span class="text-4xl md:text-6xl font-fashion italic mx-8">Timeless Design</span>
+            <span class="text-4xl md:text-6xl font-serif mx-8">♦</span>
+            <span class="text-4xl md:text-6xl font-fashion italic mx-8">Handcrafted Quality</span>
+            <span class="text-4xl md:text-6xl font-serif mx-8">♦</span>
+            <span class="text-4xl md:text-6xl font-fashion italic mx-8">Sustainable Luxury</span>
+        </div>
+    </div>
+
+    <!-- Stories Section -->
+    <section id="stories" class="py-24 bg-brand-cream">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="flex justify-between items-end mb-16 px-2 scroll-trigger">
+                <div>
+                    <span class="text-xs font-sans tracking-[0.3em] uppercase text-gray-500 block mb-3">Journal</span>
+                    <h2 class="text-4xl md:text-5xl font-fashion">Stories & Crafts</h2>
+                </div>
+                <a href="#"
+                    class="hidden md:block text-xs uppercase tracking-[0.2em] font-bold hover:text-gray-600 transition-colors">Read
+                    All Stories</a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Story 1 -->
+                <article
+                    class="group bg-white cursor-pointer scroll-trigger delay-100 hover:shadow-xl transition-all duration-300">
+                    <div class="overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?q=80&w=2111&auto=format&fit=crop"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt="Fabric detail">
+                    </div>
+                    <div class="p-8">
+                        <span class="text-[10px] tracking-[0.2em] text-gray-400 uppercase">Process</span>
+                        <h3 class="text-2xl font-serif mt-3 mb-4 group-hover:text-gray-600 transition-colors">The Art of
+                            Sewing</h3>
+                        <p class="text-sm text-gray-500 font-sans leading-relaxed mb-6">
+                            Discover the meticulous process behind our signature stitch, ensuring durability without
+                            compromising on style.
+                        </p>
+                        <span
+                            class="text-xs uppercase font-bold tracking-wider border-b border-gray-200 group-hover:border-black transition-colors">Read
+                            Article</span>
+                    </div>
+                </article>
+
+                <!-- Story 2 -->
+                <article
+                    class="group bg-white cursor-pointer scroll-trigger delay-200 hover:shadow-xl transition-all duration-300">
+                    <div class="overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt="Designer sketch">
+                    </div>
+                    <div class="p-8">
+                        <span class="text-[10px] tracking-[0.2em] text-gray-400 uppercase">Design</span>
+                        <h3 class="text-2xl font-serif mt-3 mb-4 group-hover:text-gray-600 transition-colors">From
+                            Sketch to Reality</h3>
+                        <p class="text-sm text-gray-500 font-sans leading-relaxed mb-6">
+                            An exclusive look into our creative director's sketchbook and the inspiration behind the
+                            Fall/Winter palette.
+                        </p>
+                        <span
+                            class="text-xs uppercase font-bold tracking-wider border-b border-gray-200 group-hover:border-black transition-colors">Read
+                            Article</span>
+                    </div>
+                </article>
+
+                <!-- Story 3 -->
+                <article
+                    class="group bg-white cursor-pointer scroll-trigger delay-300 hover:shadow-xl transition-all duration-300">
+                    <div class="overflow-hidden h-64">
+                        <img src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=2070&auto=format&fit=crop"
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            alt="Store interior">
+                    </div>
+                    <div class="p-8">
+                        <span class="text-[10px] tracking-[0.2em] text-gray-400 uppercase">Spaces</span>
+                        <h3 class="text-2xl font-serif mt-3 mb-4 group-hover:text-gray-600 transition-colors">Our Milan
+                            Studio</h3>
+                        <p class="text-sm text-gray-500 font-sans leading-relaxed mb-6">
+                            Take a tour of our flagship studio in the heart of Milan, where traditional craftsmanship
+                            meets modern innovation.
+                        </p>
+                        <span
+                            class="text-xs uppercase font-bold tracking-wider border-b border-gray-200 group-hover:border-black transition-colors">Read
+                            Article</span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brand-black text-white py-20 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+            <div class="max-w-xs">
+                <div class="text-2xl font-fashion italic mb-6">Knitwear & Co.</div>
+                <p class="text-gray-400 text-sm font-sans leading-relaxed">
+                    Redefining luxury through sustainable practices and timeless design.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-12 text-sm font-sans tracking-wide">
+                <div>
+                    <h4 class="font-bold uppercase mb-4 text-gray-500">Shop</h4>
+                    <ul class="space-y-3 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors">New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Best Sellers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Accessories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold uppercase mb-4 text-gray-500">Company</h4>
+                    <ul class="space-y-3 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors">Our Story</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Sustainability</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold uppercase mb-4 text-gray-500">Follow</h4>
+                    <ul class="space-y-3 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors">Instagram</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Pinterest</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">TikTok</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div
+            class="border-t border-gray-800 mt-16 pt-8 text-center md:text-left text-xs text-gray-600 uppercase tracking-widest">
+            &copy; 2024 Knitwear & Co. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Intersection Observer for Scroll Animations -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-up', 'visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const elements = document.querySelectorAll('.scroll-trigger');
+            elements.forEach(el => {
+                el.classList.add('fade-in-up');
+                observer.observe(el);
+            });
+
+            // Navbar background change on scroll
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-black/90', 'backdrop-blur-md', 'py-4');
+                    navbar.classList.remove('py-8', 'mix-blend-difference');
+                } else {
+                    navbar.classList.remove('bg-black/90', 'backdrop-blur-md', 'py-4');
+                    navbar.classList.add('py-8', 'mix-blend-difference');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

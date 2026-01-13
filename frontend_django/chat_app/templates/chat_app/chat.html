@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection | Knitwear & Co.</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Lato', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            black: '#1a1a1a',
+                            gray: '#f4f4f4',
+                            accent: '#000000', // Strict Black for high fashion feel
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom minimalist scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e5e5e5;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4d4d4;
+        }
+
+        .fade-up {
+            animation: fadeUp 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            /* Default delay if var is missing */
+            animation-delay: calc(var(--i, 0) * 100ms);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Chat Markdown Styles */
+        .prose-chat p {
+            margin-bottom: 0.75em;
+            line-height: 1.6;
+        }
+
+        .prose-chat ul {
+            list-style-type: disc;
+            padding-left: 1.2em;
+            margin-bottom: 0.75em;
+        }
+
+        .prose-chat ol {
+            list-style-type: decimal;
+            padding-left: 1.2em;
+            margin-bottom: 0.75em;
+        }
+
+        .prose-chat li {
+            margin-bottom: 0.25em;
+        }
+
+        .prose-chat strong {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .prose-chat *:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-brand-black font-sans min-h-screen flex flex-col">
+
+    <!-- Minimal Header -->
+    <header
+        class="sticky top-0 bg-white/95 backdrop-blur-sm z-40 border-b border-gray-100 py-4 px-6 md:px-12 flex justify-between items-center transition-all duration-300">
+        <a href="{% url 'home' %}"
+            class="text-xl md:text-2xl font-serif font-bold tracking-widest uppercase hover:opacity-70 transition-opacity">
+            Knitwear & Co.
+        </a>
+
+        <nav class="hidden md:flex gap-8 text-xs font-bold tracking-widest uppercase text-gray-500">
+            <a href="?gender=Women"
+                class="hover:text-black transition-colors {% if selected_gender == 'Women' %}text-black border-b border-black pb-0.5{% endif %}">Women</a>
+            <a href="?gender=Men"
+                class="hover:text-black transition-colors {% if selected_gender == 'Men' %}text-black border-b border-black pb-0.5{% endif %}">Men</a>
+            <a href="?gender=Unisex"
+                class="hover:text-black transition-colors {% if selected_gender == 'Unisex' %}text-black border-b border-black pb-0.5{% endif %}">Unisex</a>
+            <a href="/"
+                class="hover:text-black transition-colors {% if selected_gender == 'All' %}text-black border-b border-black pb-0.5{% endif %}">View
+                All</a>
+        </nav>
+
+        <div class="text-xs uppercase tracking-widest cursor-pointer hover:text-gray-500 transition-colors">
+            Cart (0)
+        </div>
+    </header>
+
+    <!-- Mobile Filter Bar -->
+    <div
+        class="md:hidden flex justify-center gap-6 py-4 border-b border-gray-100 text-[10px] font-bold tracking-widest uppercase overflow-x-auto">
+        <a href="?gender=Women"
+            class="{% if selected_gender == 'Women' %}text-black underline{% else %}text-gray-400{% endif %}">Women</a>
+        <a href="?gender=Men"
+            class="{% if selected_gender == 'Men' %}text-black underline{% else %}text-gray-400{% endif %}">Men</a>
+        <a href="?gender=Unisex"
+            class="{% if selected_gender == 'Unisex' %}text-black underline{% else %}text-gray-400{% endif %}">Unisex</a>
+        <a href="/"
+            class="{% if selected_gender == 'All' %}text-black underline{% else %}text-gray-400{% endif %}">All</a>
+    </div>
+
+    <!-- Collection Header -->
+    <div class="pt-16 pb-12 text-center fade-up">
+        <p class="text-[10px] md:text-xs tracking-[0.2em] uppercase text-gray-400 mb-3">Fall / Winter 2026</p>
+        <h1 class="text-3xl md:text-5xl font-serif italic mb-2">
+            {% if selected_gender == 'All' %}The Collection{% else %}{{ selected_gender }}'s Edit{% endif %}
+        </h1>
+    </div>
+
+    <!-- Product Grid -->
+    <main class="flex-1 px-4 md:px-12 pb-24">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12">
+            {% for product in products %}
+            <div class="group cursor-pointer fade-up" style="--i: {{ forloop.counter }};">
+                <div class="w-full aspect-[3/4] bg-gray-100 overflow-hidden relative mb-4">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                        class="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110 opacity-95 hover:opacity-100">
+                    {% else %}
+                    <div
+                        class="w-full h-full flex items-center justify-center text-gray-300 text-xs uppercase tracking-widest">
+                        No Image</div>
+                    {% endif %}
+
+                    <!-- Quick Add Overlay -->
+                    <div
+                        class="absolute inset-x-0 bottom-0 bg-white/90 py-3 text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        <span class="text-[10px] font-bold tracking-widest uppercase">Quick Add</span>
+                    </div>
+                </div>
+
+                <div class="text-center pt-2">
+                    <h3 class="font-serif text-lg text-gray-900 mb-1 group-hover:text-black transition-colors">
+                        {{ product.name }}
+                    </h3>
+                    <p class="text-sm font-bold tracking-wide">${{ product.price }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-20 text-gray-400 font-serif italic text-xl">
+                No pieces found in this collection.
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-100 py-12 text-center">
+        <div class="text-[10px] uppercase tracking-widest text-gray-400">
+            &copy; 2024 Knitwear & Co. — Milan / Paris / New York
+        </div>
+    </footer>
+
+    <!-- Minimal Chat Widget -->
+    <div class="fixed bottom-8 right-8 z-50 flex flex-col items-end">
+
+        <!-- Chat Box -->
+        <div id="chat-box"
+            class="hidden bg-white w-80 md:w-96 shadow-2xl mb-4 border border-gray-100 animate-slide-up flex-col h-[500px] max-h-[70vh]">
+            <div class="p-4 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0">
+                <span class="font-serif italic text-lg">Personal Stylist</span>
+                <button onclick="toggleChat()" class="text-gray-400 hover:text-black transition-colors">✕</button>
+            </div>
+
+            <div id="chat-content" class="flex-1 overflow-y-auto p-5 space-y-4 bg-gray-50">
+                <div class="flex flex-col items-start gap-1">
+                    <div class="bg-white border border-gray-200 p-3 text-sm max-w-[85%] shadow-sm">
+                        Hello. I am your digital styling assistant. How can I help you curate your wardrobe today?
+                    </div>
+                    <span class="text-[9px] text-gray-400 uppercase tracking-wider ml-1">Assistant</span>
+                </div>
+            </div>
+
+            <div class="p-4 bg-white border-t border-gray-100">
+                <div class="flex gap-2">
+                    <input type="text" id="user-input" placeholder="Ask about styling..."
+                        class="flex-1 bg-gray-50 border-0 p-3 text-sm focus:ring-1 focus:ring-black placeholder-gray-400 outline-none">
+                    <button id="send-btn"
+                        class="px-4 bg-black text-white text-xs uppercase tracking-widest hover:bg-gray-800 transition-colors">Send</button>
+                </div>
+                {% csrf_token %}
+            </div>
+        </div>
+
+        <!-- Toggle Button -->
+        <button onclick="toggleChat()"
+            class="bg-black text-white w-14 h-14 flex items-center justify-center shadow-lg hover:scale-105 transition-transform duration-300 group">
+            <!-- Icon -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                class="group-hover:stroke-gray-300 transition-colors">
+                <path
+                    d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+        </button>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatContent = document.getElementById('chat-content');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        let isOpen = false;
+
+        function toggleChat() {
+            isOpen = !isOpen;
+            if (isOpen) {
+                chatBox.classList.remove('hidden');
+                chatBox.classList.add('flex');
+                userInput.focus();
+            } else {
+                chatBox.classList.add('hidden');
+                chatBox.classList.remove('flex');
+            }
+        }
+
+        function addMessage(text, sender) {
+            const wrapper = document.createElement('div');
+            wrapper.className = `flex flex-col gap-1 ${sender === 'user' ? 'items-end' : 'items-start'}`;
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `p-3 text-sm max-w-[85%] shadow-sm ${sender === 'user' ? 'bg-black text-white' : 'bg-white border border-gray-200'}`;
+
+            if (sender === 'bot') {
+                msgDiv.classList.add('prose-chat');
+                msgDiv.innerHTML = marked.parse(text);
+            } else {
+                msgDiv.textContent = text;
+            }
+
+            const label = document.createElement('span');
+            label.className = "text-[9px] text-gray-400 uppercase tracking-wider mx-1";
+            label.textContent = sender === 'user' ? 'You' : 'Assistant';
+
+            wrapper.appendChild(msgDiv);
+            wrapper.appendChild(label);
+            chatContent.appendChild(wrapper);
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const question = userInput.value.trim();
+            if (!question) return;
+
+            addMessage(question, 'user');
+            userInput.value = '';
+
+            // Loading indicator
+            const loadWrapper = document.createElement('div');
+            loadWrapper.id = 'loading';
+            loadWrapper.className = 'flex flex-col items-start gap-1';
+            loadWrapper.innerHTML = `<div class="bg-gray-50 border border-gray-100 p-3 text-sm max-w-[85%] italic text-gray-400">Typing...</div>`;
+            chatContent.appendChild(loadWrapper);
+            chatContent.scrollTop = chatContent.scrollHeight;
+
+            try {
+                const response = await fetch('', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+                    body: JSON.stringify({ question: question })
+                });
+                const data = await response.json();
+                document.getElementById('loading').remove();
+                if (response.ok) addMessage(data.answer, 'bot');
+                else addMessage("Error: " + (data.error || "Unknown"), 'bot');
+            } catch (error) {
+                if (document.getElementById('loading')) document.getElementById('loading').remove();
+                addMessage("Connection lost. Please try again.", 'bot');
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+
+</html>

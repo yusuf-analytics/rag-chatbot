@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 md:p-10 rounded-2xl shadow-xl shadow-slate-200/50 w-full max-w-lg border border-slate-100">
+        <h2 class="text-2xl font-bold text-slate-800 mb-6 text-center">{{ title }}</h2>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-5">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="flex flex-col gap-1.5">
+                <label class="text-sm font-semibold text-slate-600 ml-1">{{ field.label }}</label>
+
+                <div class="relative">
+                    <!-- Check if it's a file input for custom styling if needed, otherwise default -->
+                    <!-- We apply tailwind classes directly to widgets if we could, but here we wrapper style -->
+                    <style>
+                        /* Quick override for Django rendered inputs to match Tailwind */
+                        input[type="text"],
+                        input[type="number"],
+                        textarea,
+                        select,
+                        input[type="email"] {
+                            width: 100%;
+                            padding: 0.75rem 1rem;
+                            border-radius: 0.5rem;
+                            border: 1px solid #cbd5e1;
+                            outline: none;
+                            transition: all 0.2s;
+                            font-size: 0.95rem;
+                        }
+
+                        input:focus,
+                        textarea:focus,
+                        select:focus {
+                            border-color: #6366f1;
+                            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+                        }
+
+                        textarea {
+                            resize: vertical;
+                            min-height: 100px;
+                        }
+
+                        /* File input override */
+                        input[type="file"] {
+                            padding: 0.5rem;
+                            border: 1px dashed #cbd5e1;
+                            background: #f8fafc;
+                            width: 100%;
+                            border-radius: 0.5rem;
+                        }
+                    </style>
+                    {{ field }}
+                </div>
+
+                {% if field.help_text %}
+                <p class="text-xs text-slate-400 ml-1 leading-snug">{{ field.help_text }}</p>
+                {% endif %}
+
+                {% if field.errors %}
+                <div class="text-red-500 text-xs font-medium ml-1">
+                    {% for error in field.errors %}
+                    {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="pt-4">
+                <button type="submit"
+                    class="w-full py-3 px-4 bg-brand-500 hover:bg-brand-600 text-white font-bold rounded-xl shadow-lg shadow-brand-500/30 transition-all transform hover:-translate-y-0.5 active:scale-95">
+                    Save Product
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-6 text-center">
+            <a href="{% url 'dashboard' %}"
+                class="text-sm font-medium text-slate-400 hover:text-slate-600 transition-colors">
+                Cancel and go back
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>

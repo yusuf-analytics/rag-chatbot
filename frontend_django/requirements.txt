@@ -7,7 +7,6 @@ psycopg2-binary>=2.9.9
 
 # AI Dependencies (Refactored)
 langchain-groq
-langchain-huggingface
 langchain-chroma
 chromadb
 fastembed

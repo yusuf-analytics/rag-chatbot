@@ -10,4 +10,5 @@ langchain-groq
 langchain-chroma
 chromadb
 fastembed
+python-dotenv
 

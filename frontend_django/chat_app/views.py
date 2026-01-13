@@ -19,21 +19,23 @@ def chat_view(request):
     Renders the chat interface and handles the proxy logic to FastAPI.
     """
     if request.method == 'POST':
+        # Parse the JSON body from the frontend fetch call
         try:
-            # Parse the JSON body from the frontend fetch call
             data = json.loads(request.body)
             question = data.get('question')
-            
-            if not question:
-                return JsonResponse({"error": "No question provided"}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON"}, status=400)
+        
+        if not question:
+            return JsonResponse({"error": "No question provided"}, status=400)
 
-            # Call AI Engine Directly (Single Server Mode)
-            # This runs inside the Django process
-            try:
-                answer = get_answer(question)
-                return JsonResponse({"answer": answer})
-            except Exception as e:
-                return JsonResponse({"error": f"AI Error: {str(e)}"}, status=500)
+        # Call AI Engine Directly (Single Server Mode)
+        # This runs inside the Django process
+        try:
+            answer = get_answer(question)
+            return JsonResponse({"answer": answer})
+        except Exception as e:
+            return JsonResponse({"error": f"AI Error: {str(e)}"}, status=500)
 
     # For GET requests, render the HTML template
     # Load product data from Database

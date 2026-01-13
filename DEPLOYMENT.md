@@ -53,3 +53,39 @@ CHROMA_PERSIST_DIRECTORY=./chroma_db
 # If using Groq
 GROQ_API_KEY=gsk_...
 ```
+
+---
+
+# G. Free Tier Deployment Strategies
+
+Jika Anda ingin opsi **GRATIS**, berikut adalah rekomendasinya. Perhatikan bahwa layanan gratis memiliki batasan (seperti *sleep* saat tidak digunakan).
+
+## 1. Render (Paling Mudah)
+Render memiliki "Free Tier" untuk Web Service, tetapi **wip** (menghapus) data disk setiap kali restart.
+- **Masalah**: Database ChromaDB (folder `chroma_db/`) akan hilang setiap kali aplikasi restart/deploy.
+- **Solusi**: Biarkan hilang. Aplikasi Anda akan otomatis membuat ulang index dari `sample_data.json` saat startup karena kode kita sudah punya logic `try...except` di startup.
+- **Caveat**: Server akan "tidur" setelah 15 menit tidak aktif. Request pertama akan lambat (50 detik+).
+
+### Cara Deploy di Render:
+1.  Buat akun di [Render.com](https://render.com).
+2.  **New Web Service** -> Connect GitHub Repo.
+3.  **Deploy Backend** (Folder `rag_chatbot/backend_fastapi`):
+    -   **Root Directory**: `rag_chatbot/backend_fastapi`
+    -   **Environment**: Python 3
+    -   **Build Command**: `pip install -r requirements.txt`
+    -   **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+    -   **Env Vars**: Tambahkan `GROQ_API_KEY` dll.
+4.  **Deploy Frontend** (Folder `rag_chatbot/frontend_django`):
+    -   **Root Directory**: `rag_chatbot/frontend_django`
+    -   **Environment**: Python 3
+    -   **Build Command**: `pip install -r requirements.txt && python manage.py migrate`
+    -   **Start Command**: `gunicorn chat_app.wsgi:application`
+    -   **Env Vars**: `FASTAPI_URL` (URL Backend dari langkah 3), `SECRET_KEY`, `DEBUG=False`.
+
+## 2. PythonAnywhere (Paling Stabil untuk Python)
+- **Gratis**: 1 Web App.
+- **Masalah**: Versi gratis tidak bisa melakukan request HTTP keluar ke situs selain yang di-whitelist (tapi OpenAI/Groq biasanya ok).
+- **Setup**: Sedikit lebih manual (upload file zip atau git pull via console, lalu setup Virtualenv).
+- **Storage**: Persistent (Data tidak akan hilang).
+
+**Rekomendasi Utama**: Gunakan **Render** untuk kemudahan setup jika Anda oke dengan "cold start" (loading awal lambat).

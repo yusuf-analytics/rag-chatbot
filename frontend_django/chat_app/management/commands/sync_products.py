@@ -46,23 +46,17 @@ class Command(BaseCommand):
             
         self.stdout.write(self.style.SUCCESS(f'Successfully synced {len(data)} products to {json_path}'))
 
-        # 2. Trigger Backend Ingestion (Combined Ingest + Refresh)
-        import urllib.request
-        from django.conf import settings
-        
-        # Use the setting from settings.py
-        # Ensure your settings.py has FASTAPI_URL = "http://127.0.0.1:8000" (or similar)
-        base_url = getattr(settings, 'FASTAPI_URL', 'http://127.0.0.1:8000')
-        ingest_url = f"{base_url}/ingest"
-        
-        self.stdout.write(f"Triggering AI Brain Update: {ingest_url}")
-        
+        # 2. Trigger Internal AI Engine Rebuild
         try:
-            req = urllib.request.Request(ingest_url, method='POST')
-            with urllib.request.urlopen(req) as response:
-                if response.status == 200:
-                    self.stdout.write(self.style.SUCCESS('✅ AI Brain Updated & Reloaded Successfully!'))
-                else:
-                    self.stdout.write(self.style.WARNING(f'⚠️ Backend returned status: {response.status}'))
+            from chat_app.ai_engine import rebuild_index
+            self.stdout.write("Triggering Internal AI Index Rebuild...")
+            
+            success = rebuild_index()
+            
+            if success:
+                self.stdout.write(self.style.SUCCESS('✅ AI Brain Updated Successfully (Internal)!'))
+            else:
+                self.stdout.write(self.style.WARNING('⚠️ AI Rebuild verification returned False.'))
+                
         except Exception as e:
-            self.stdout.write(self.style.WARNING(f'Could not update AI (Is backend running?): {e}'))
+            self.stdout.write(self.style.WARNING(f'Could not update AI Index: {e}'))

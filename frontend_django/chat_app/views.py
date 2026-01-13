@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.conf import settings
 from django.views.decorators.csrf import ensure_csrf_cookie
+from .ai_engine import get_answer  # Direct Import
 
 @ensure_csrf_cookie
 def home(request):
@@ -26,27 +27,13 @@ def chat_view(request):
             if not question:
                 return JsonResponse({"error": "No question provided"}, status=400)
 
-            # URL of the FastAPI Backend
-            fastapi_url = f"{settings.FASTAPI_URL}/chat"
-            
-            # Forward the request to FastAPI
-            # We wrap this in a try/except to handle connection errors
-            response = requests.post(fastapi_url, json={"question": question})
-            
-            # Check if FastAPI returned success
-            if response.status_code == 200:
-                # Return the JSON response from FastAPI directly to the frontend
-                return JsonResponse(response.json())
-            else:
-                return JsonResponse(
-                    {"error": f"Error from AI Backend: {response.text}"}, 
-                    status=response.status_code
-                )
-                
-        except requests.exceptions.RequestException as e:
-            return JsonResponse({"error": f"Backend connection failed: {str(e)}"}, status=503)
-        except Exception as e:
-            return JsonResponse({"error": f"Internal Server Error: {str(e)}"}, status=500)
+            # Call AI Engine Directly (Single Server Mode)
+            # This runs inside the Django process
+            try:
+                answer = get_answer(question)
+                return JsonResponse({"answer": answer})
+            except Exception as e:
+                return JsonResponse({"error": f"AI Error: {str(e)}"}, status=500)
 
     # For GET requests, render the HTML template
     # Load product data from Database

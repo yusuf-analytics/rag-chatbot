@@ -10,5 +10,5 @@ langchain-groq
 langchain-huggingface
 langchain-chroma
 chromadb
-sentence-transformers
+fastembed
 

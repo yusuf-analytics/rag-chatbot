@@ -2,12 +2,7 @@ import os
 import json
 from django.conf import settings
 from langchain_chroma import Chroma
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_groq import ChatGroq
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.documents import Document
+from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
 
 # Define paths
 # Use a specific path for ChromaDB
@@ -26,8 +21,8 @@ def get_rag_chain():
         print(f"ChromaDB not found at {PERSIST_DIRECTORY}. Building index now...")
         rebuild_index()
 
-    # 1. Initialize Embeddings (HuggingFace - Local)
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    # 1. Initialize Embeddings (FastEmbed - Lightweight, No Torch)
+    embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5") # Lightweight model
 
     # 2. Connect to Vector DB
     vectorstore = Chroma(
@@ -102,7 +97,7 @@ def rebuild_index():
         documents.append(Document(page_content=content, metadata=metadata))
 
     # Initialize Embeddings
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    embeddings = FastEmbedEmbeddings(model_name="BAAI/bge-small-en-v1.5")
     
     # Clear and Add
     vectorstore = Chroma(
